@@ -138,8 +138,7 @@ ALTER TABLE orders ADD(
 );
 ```
 
-# Data Insertion Queries 
-
+**Create user**
 ```
 INSERT INTO users (id, email, phone, password) VALUES (1, 'faisal@gmail.com','01234567892', '123');
 INSERT INTO users (id, email, phone, password) VALUES (2, 'rakib@gmail.com','012345455845', '123');
@@ -154,23 +153,31 @@ INSERT INTO customer (id, name, user_id) VALUES (3, 'Farhad', 3);
 INSERT INTO customer (id, name, user_id) VALUES (4, 'Hasan', 4);
 INSERT INTO customer (id, name, user_id) VALUES (5, 'Robin', 5);
 INSERT INTO customer (id, name, user_id) VALUES (6, 'Tanvir', 6);
- 
+```
+
+**Create restaurants**
+```
 INSERT INTO restaurants (id, name, image, user_id, opening_time,     closing_time, availability) VALUES (1, 'KFC', 'banner.jpg', 3, '10:00', '22:00', 'open');
 INSERT INTO restaurants (id, name, image, user_id, opening_time, closing_time, availability) VALUES (2, 'Burger King', 'banner.jpg', 3, '10:00', '22:00', 'open');
 INSERT INTO restaurants (id, name, image, user_id, opening_time, closing_time, availability) VALUES (3, 'McDonalds', 'banner.jpg', 3, '10:00', '22:00', 'open');
 INSERT INTO restaurants (id, name, image, user_id, opening_time, closing_time, availability) VALUES (4, 'Pizza Hut', 'banner.jpg', 3, '10:00', '22:00', 'open');
 INSERT INTO restaurants (id, name, image, user_id, opening_time, closing_time, availability) VALUES (5, 'Dominos', 'banner.jpg', 3, '10:00', '22:00', 'open');
 INSERT INTO restaurants (id, name, image, user_id, opening_time, closing_time, availability) VALUES (6, 'Subway', 'banner.jpg', 3, '10:00', '22:00', 'open');
+ ```
  
-INSERT INTO categories (id, name, image) VALUES (1, 'Burger', 'burger.jpg');
+ **Create categories**
+ ```
+ INSERT INTO categories (id, name, image) VALUES (1, 'Burger', 'burger.jpg');
 INSERT INTO categories (id, name, image) VALUES (2, 'Pizza', 'pizza.jpg');
 INSERT INTO categories (id, name, image) VALUES (3, 'Drinks', 'drinks.jpg');
 INSERT INTO categories (id, name, image) VALUES (4, 'Dessert', 'dessert.jpg');
 INSERT INTO categories (id, name, image) VALUES (5, 'Chicken', 'chicken.jpg');
 INSERT INTO categories (id, name, image) VALUES (6, 'Sandwich', 'sandwich.jpg');
+ ```
  
- 
-INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (1, 'Chicken Burger', 'burger.jpg', 100, 1, 1, 'Chicken Burger', 'available');
+ **Create some products**
+ ```
+ INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (1, 'Chicken Burger', 'burger.jpg', 100, 1, 1, 'Chicken Burger', 'available');
 INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (2, 'Beef Burger', 'burger.jpg', 120, 1, 1, 'Beef Burger', 'available');
 INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (3, 'Chicken Pizza', 'pizza.jpg', 150, 1, 2, 'Chicken Pizza', 'available');
  
@@ -183,7 +190,11 @@ INSERT INTO product (id, name, image, price, restaurant_id, category_id, details
 INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (10, 'Chicken Nuggets', 'chicken.jpg', 50, 1, 5, 'Chicken Nuggets', 'available');
 INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (11, 'Chicken Burger', 'burger.jpg', 100, 2, 1, 'Chicken Burger', 'available');
 INSERT INTO product (id, name, image, price, restaurant_id, category_id, details, availability) VALUES (12, 'Beef Burger', 'burger.jpg', 120, 2, 1, 'Beef Burger', 'available');
- 
+```
+
+
+**Place some order**
+```
 INSERT INTO orders (id, customer_id, status, payment_method, payment_status, total_charge, delivery_charge, address, created_at) VALUES (1, 1, 'pending', 'cash', 'paid', 100, 10, 'Dhaka', TO_DATE('2022-10-04', 'YYYY-MM-DD'));
 INSERT INTO order_item (id, quantity, product_id, order_id) VALUES (1, 1, 1, 1);
 INSERT INTO order_item (id, quantity, product_id, order_id) VALUES (2, 1, 2, 1);
@@ -206,27 +217,78 @@ INSERT INTO order_item (id, quantity, product_id, order_id) VALUES (9, 1, 9, 5);
 INSERT INTO order_item (id, quantity, product_id, order_id) VALUES (10, 1, 10, 5);
 ```
 
-### Update order status 
+**Update order status to delivered for order id 1**
 ```
 UPDATE orders SET status = 'delivered' WHERE id = 1;
-
-
 ```
 
-### Data fetching 
+**Get all orders for customer id 1**
 ```
-select * from orders;
+select * from orders where customer_id = 1;
+```
+
+**Get order which order id is equal to 1**
+```
 select * from orders where id=1;
+```
+
+**Get all delivered order**
+```
 SELECT * from orders where status='delivered';
+```
+
+
+**Get orders with order item quantity and order status**
+```
 SELECT o.status, oi.quantity, p.name FROM orders o JOIN order_item oi ON o.id = oi.order_id INNER JOIN product p ON oi.product_id = p.id LIMIT 10;
+```
+
+**Get average order value**
+```
 SELECT avg(total_charge) FROM orders;
+```
+
+**Get total item value for specific order by id**
+```
 SELECT sum(price * quantity) FROM order_item oi INNER JOIN product p ON oi.product_id = p.id WHERE oi.order_id = 1;
+```
+
+**Get sold item quantity of specific product by id**
+```
 SELECT sum(quantity) FROM order_item WHERE product_id = 9;
+```
+
+
+**Order count for specific product by id**
+```
 SELECT count(quantity) FROM order_item WHERE product_id = 9;
- 
+```
+
+
+**Fetch all customer, restaurant and categories**
+```
 SELECT * FROM customer;
 SELECT * FROM restaurant;
 SELECT * FROM categories;
+```
+
+**Fetch products including category name**
+```
 SELECT p.name, c.name FROM product p INNER JOIN categories c ON p.category_id = c.id;
+```
+
+
+**Fetch products including restaurant name**
+```
 SELECT product.name, restaurants.name FROM product JOIN restaurants ON product.restaurant_id = restaurants.id;
+```
+
+**Create products table view**
+```
+CREATE VIEW products AS SELECT p.name, c.name FROM product p INNER JOIN categories c ON p.category_id = c.id;
+```
+
+**Create restaurants table view**
+```
+CREATE VIEW restaurants AS SELECT product.name, restaurants.name FROM product JOIN restaurants ON product.restaurant_id = restaurants.id;
 ```
